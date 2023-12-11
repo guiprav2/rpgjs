@@ -21,6 +21,7 @@
 </style>
 <body>
   <script type="module">
+    import d from './dominant.js';
     import rpg from './rpg.js';
 
     let [rb, mapa] = await Promise.all([
@@ -28,38 +29,46 @@
       fetch('./map_a.json').then(x => x.json()),
     ]);
 
-    let waterFetched = false;
-    let waterbucket = (x, y, ...rest) => rpg.tileSprite(x, y, 0, 60, 0, ...rest);
-    let traphole = (x, y, ...rest) => rpg.trap(x, y, ...rest);
+    class MainLevel {
+      constructor({ roadblocks, map }) {
+        Object.assign(this, { roadblocks, map });
+      }
 
-    document.body.append(rpg({ width: '320px', height: '256px' }, [
-      rpg.viewport([
-        rpg.tilemap('32px', '32px', 10, 8, 'ground.png', 'sonetto.png', rb, [
-          rpg.tiles(mapa.map(xs => rpg.tile(...xs))),
-          rpg.sprites([
-            rpg.hero(rpg.sprite(2, 3, '78px', '48px', 'siren.png')),
-            rpg.sprite(3, 1, '111px', '62px', 'dracula.png', 0, {
-              onAction: async () => {
-                if (!waterFetched) { alert('go fetch water') }
-                else { waterFetched = false; alert('thanks!') }
-                await new Promise(res => setTimeout(res, 1000));
-              },
-            }),
-            waterbucket(7, 3, {
-              onAction: async () => {
-                waterFetched = true; alert('water fetched!');
-                await new Promise(res => setTimeout(res, 1000));
-              },
-            }),
-            traphole(4, 6, {
-              onFall: async () => {
-                alert('change map!');
-                await new Promise(res => setTimeout(res, 1000));
-              },
-            }),
+      waterFetched = false;
+      waterbucket = (x, y, ...rest) => rpg.tileSprite(x, y, 0, 60, 0, ...rest);
+      traphole = (x, y, ...rest) => rpg.trap(x, y, ...rest);
+
+      render = () => rpg({ width: '320px', height: '256px' }, [
+        rpg.viewport([
+          rpg.tilemap('32px', '32px', 10, 8, 'ground.png', 'sonetto.png', this.roadblocks, [
+            rpg.tiles(this.map.map(xs => rpg.tile(...xs))),
+            rpg.sprites([
+              rpg.hero(rpg.sprite(2, 3, '78px', '48px', 'siren.png')),
+              rpg.sprite(3, 1, '111px', '62px', 'dracula.png', 0, {
+                onAction: async () => {
+                  if (!this.waterFetched) { alert('go fetch water') }
+                  else { this.waterFetched = false; alert('thanks!') }
+                  await new Promise(res => setTimeout(res, 1000));
+                },
+              }),
+              this.waterbucket(7, 3, {
+                onAction: async () => {
+                  this.waterFetched = true; alert('water fetched!');
+                  await new Promise(res => setTimeout(res, 1000));
+                },
+              }),
+              this.traphole(4, 6, {
+                onFall: async () => {
+                  alert('change map!');
+                  await new Promise(res => setTimeout(res, 1000));
+                },
+              }),
+            ]),
           ]),
         ]),
-      ]),
-    ]));
+      ]);
+    }
+
+    document.body.append(d.el(MainLevel, { roadblocks: rb, map: mapa }));
   </script>
 </body>

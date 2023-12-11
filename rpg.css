@@ -19,12 +19,16 @@
   background-image: var(--rpg-bg);
 }
 
-.rpg .tile {
+.rpg .tile,
+.rpg .trap {
   position: absolute;
   left: calc(var(--rpg-x) * var(--rpg-tw));
   top: calc(var(--rpg-y) * var(--rpg-th));
   width: var(--rpg-tw);
   height: var(--rpg-th);
+}
+
+.rpg .tile {
   background-image: var(--rpg-tileset);
   background-position: calc(-1 * var(--rpg-tx) * var(--rpg-tw)) calc(-1 * var(--rpg-ty) * var(--rpg-th));
   z-index: calc(var(--rpg-layer, 0) * var(--rpg-layer-size, 1000) + var(--rpg-high-tile, 0) + var(--rpg-y));

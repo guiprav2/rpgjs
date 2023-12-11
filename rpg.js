@@ -61,6 +61,14 @@ rpg.findTiles = function(root, x, y) {
   return tiles;
 };
 
+rpg.trap = function(x, y, eventHandlers = {}) {
+  let div = document.createElement('div');
+  div.className = 'trap';
+  for (let [k, v] of Object.entries({ x, y })) { v != null && div.style.setProperty(`--rpg-${k}`, v) }
+  div.eventHandlers = eventHandlers;
+  return div;
+};
+
 rpg.sprites = function(children) {
   let div = document.createElement('div');
   div.className = 'sprites';
@@ -138,7 +146,31 @@ heroFrame.transition = function(sprite) {
     sprite.classList.remove('walking');
     sprite.removeEventListener('transitionend', sprite.transitionHandler);
     sprite.transitionHandler = null;
+    let map = sprite.closest('.tilemap');
+    let x = Number(sprite.style.getPropertyValue('--rpg-x'));
+    let y = Number(sprite.style.getPropertyValue('--rpg-y'));
+    let trap = rpg.findTrap(map, x, y);
+    if (!trap) { return }
+    rpg.fall(trap);
   }
+};
+
+rpg.findTrap = function(map, x, y) {
+  for (let trap of map.querySelectorAll('.trap')) {
+    let x2 = Number(trap.style.getPropertyValue('--rpg-x'));
+    let y2 = Number(trap.style.getPropertyValue('--rpg-y'));
+    if (x === x2 && y === y2) { return trap }
+  }
+  return null;
+};
+
+rpg.fall = async function(trap) {
+  let root = trap.closest('.rpg');
+  let { onFall } = trap.eventHandlers || {};
+  if (!onFall) { return }
+  root.classList.add('locked');
+  await onFall();
+  root.classList.remove('locked');
 };
 
 rpg.findSprite = function(root, x, y) {

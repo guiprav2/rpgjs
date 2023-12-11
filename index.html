@@ -30,6 +30,7 @@
 
     let waterFetched = false;
     let waterbucket = (x, y, ...rest) => rpg.tileSprite(x, y, 0, 60, 0, ...rest);
+    let traphole = (x, y, ...rest) => rpg.trap(x, y, ...rest);
 
     document.body.append(rpg({ width: '320px', height: '256px' }, [
       rpg.viewport([
@@ -47,6 +48,12 @@
             waterbucket(7, 3, {
               onAction: async () => {
                 waterFetched = true; alert('water fetched!');
+                await new Promise(res => setTimeout(res, 1000));
+              },
+            }),
+            traphole(4, 6, {
+              onFall: async () => {
+                alert('change map!');
                 await new Promise(res => setTimeout(res, 1000));
               },
             }),

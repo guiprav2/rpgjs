@@ -36,7 +36,7 @@
         rpg.tilemap('32px', '32px', 10, 8, 'ground.png', 'sonetto.png', rb, [
           rpg.tiles(mapa.map(xs => rpg.tile(...xs))),
           rpg.sprites([
-            rpg.hero(rpg.sprite(2, 2, '78px', '48px', 'siren.png')),
+            rpg.hero(rpg.sprite(2, 3, '78px', '48px', 'siren.png')),
             rpg.sprite(3, 1, '111px', '62px', 'dracula.png', 0, {
               onAction: async () => {
                 if (!waterFetched) { alert('go fetch water') }
@@ -44,7 +44,7 @@
                 await new Promise(res => setTimeout(res, 1000));
               },
             }),
-            waterbucket(7, 5, {
+            waterbucket(7, 3, {
               onAction: async () => {
                 waterFetched = true; alert('water fetched!');
                 await new Promise(res => setTimeout(res, 1000));

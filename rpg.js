@@ -80,6 +80,15 @@ rpg.sprite = function(x, y, sw, sh, sprite, layer, eventHandlers = {}) {
   return div;
 };
 
+rpg.tileSprite = function(x, y, tx, ty, layer, eventHandlers) {
+  let div = document.createElement('div');
+  div.className = 'sprite';
+  for (let [k, v] of Object.entries({ x, y })) { v != null && div.style.setProperty(`--rpg-${k}`, v) }
+  div.eventHandlers = eventHandlers;
+  div.append(rpg.tile(0, 0, tx, ty, layer));
+  return div;
+};
+
 rpg.hero = function(sprite) {
   sprite.classList.add('hero');
   heroFrame(sprite);

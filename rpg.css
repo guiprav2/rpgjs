@@ -1,0 +1,64 @@
+.rpg {
+  position: relative;
+  overflow: hidden;
+}
+
+.rpg .viewport {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  overflow: hidden; /* no visible scrollbars, but scrollable using JS */
+}
+
+.rpg .tilemap {
+  position: relative;
+  width: calc(var(--rpg-tmw) * var(--rpg-tw));
+  height: calc(var(--rpg-tmh) * var(--rpg-th));
+  background-image: var(--rpg-bg);
+}
+
+.rpg .tile {
+  position: absolute;
+  left: calc(var(--rpg-x) * var(--rpg-tw));
+  top: calc(var(--rpg-y) * var(--rpg-th));
+  width: var(--rpg-tw);
+  height: var(--rpg-th);
+  background-image: var(--rpg-tileset);
+  background-position: calc(var(--rpg-tx) * var(--rpg-tw)) calc(var(--rpg-ty) * var(--rpg-th));
+}
+
+.rpg .sprite {
+  position: absolute;
+  left: calc(var(--rpg-x) * var(--rpg-tw));
+  top: calc(var(--rpg-y) * var(--rpg-th));
+  width: var(--rpg-tw);
+  height: var(--rpg-th);
+}
+
+.rpg .sprite-internal {
+  position: absolute;
+  left: calc(-1 * (var(--rpg-sw) - var(--rpg-tw)) / 2);
+  top: calc(-1 * var(--rpg-sh) + var(--rpg-th));
+  width: var(--rpg-sw);
+  height: var(--rpg-sh);
+  background-image: var(--rpg-sprite);
+  background-position-y: calc(var(--rpg-sy) * var(--rpg-sh));
+}
+
+.rpg .sprite.animate .sprite-internal,
+.rpg .sprite.walking .sprite-internal {
+  animation: frames steps(4, end) infinite;
+  animation-duration: var(--rpg-anim-duration, 0.7s);
+}
+
+@keyframes frames {
+  to {
+    background-position-x: calc(-4 * var(--rpg-sw));
+  }
+}
+
+.rpg .sprite.walking {
+  transition: var(--rpg-walk-duration, 0.5s) linear left, var(--rpg-walk-duration, 0.5s) linear top;
+}

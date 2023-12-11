@@ -1,0 +1,36 @@
+<!doctype html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="preflight.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<link rel="stylesheet" href="rpg.css">
+<style>
+  body {
+    background-image: url("bg.png");
+  }
+
+  .rpg {
+    margin: 0 auto;
+    outline: 4px solid #000000a0;
+    border-radius: 4px;
+    transform: scale(200%) translateY(5rem);
+    image-rendering: crisp-edges;
+  }
+</style>
+<body>
+  <script type="module">
+    import rpg from './rpg.js';
+
+    document.body.append(rpg({ width: '320px', height: '256px' }, [
+      rpg.viewport([
+        rpg.tilemap('32px', '32px', 10, 8, 'ground.png', 'sonetto.png', [
+          rpg.tiles([
+            rpg.tile(1, 1, 0, 1),
+          ]),
+          rpg.sprites([
+            rpg.hero(rpg.sprite(2, 2, '78px', '48px', 'siren.png')),
+          ]),
+        ]),
+      ]),
+    ]));
+  </script>
+</body>

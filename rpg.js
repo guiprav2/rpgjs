@@ -126,7 +126,7 @@ rpg.spriteUnblocked = function(sprite) {
   let map = sprite.closest('.tilemap');
   let sx = Number(sprite.style.getPropertyValue('--rpg-x'));
   let sy = Number(sprite.style.getPropertyValue('--rpg-y'));
-  let dir = sprite.style.getPropertyValue('--rpg-sy') || '0';
+  let dir = Number(sprite.style.getPropertyValue('--rpg-sy')) || 0;
 
   for (let tile of rpg.findTiles(map, sx, sy)) {
     let tx = Number(tile.style.getPropertyValue('--rpg-tx'));
@@ -137,10 +137,10 @@ rpg.spriteUnblocked = function(sprite) {
 
   let nsx = sx, nsy = sy, incomingDir;
   switch (dir) {
-    case '0': nsy++; incomingDir = 1; break;
-    case '1': nsy--; incomingDir = 0; break;
-    case '2': nsx++; incomingDir = 3; break;
-    case '3': nsx--; incomingDir = 2; break;
+    case 0: nsy++; incomingDir = 1; break;
+    case 1: nsy--; incomingDir = 0; break;
+    case 2: nsx++; incomingDir = 3; break;
+    case 3: nsx--; incomingDir = 2; break;
   }
 
   for (let tile of rpg.findTiles(map, nsx, nsy)) {

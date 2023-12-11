@@ -35,10 +35,10 @@ rpg.tiles = function(children) {
   return div;
 };
 
-rpg.tile = function(x, y, tx, ty) {
+rpg.tile = function(x, y, tx, ty, layer) {
   let div = document.createElement('div');
   div.className = 'tile';
-  for (let [k, v] of Object.entries({ x, y, tx, ty })) { div.style.setProperty(`--rpg-${k}`, v) }
+  for (let [k, v] of Object.entries({ x, y, tx, ty, layer })) { v != null && div.style.setProperty(`--rpg-${k}`, v) }
   return div;
 };
 
@@ -49,12 +49,12 @@ rpg.sprites = function(children) {
   return div;
 };
 
-rpg.sprite = function(x, y, sw, sh, sprite) {
+rpg.sprite = function(x, y, sw, sh, sprite, layer) {
   let div = document.createElement('div');
   let internal = document.createElement('div');
   div.className = 'sprite';
   internal.className = 'sprite-internal';
-  for (let [k, v] of Object.entries({ x, y, sw, sh })) { div.style.setProperty(`--rpg-${k}`, v) }
+  for (let [k, v] of Object.entries({ x, y, sw, sh, layer })) { v != null && div.style.setProperty(`--rpg-${k}`, v) }
   div.style.setProperty('--rpg-sprite', `url("${sprite}")`);
   div.append(internal);
   return div;

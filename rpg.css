@@ -27,6 +27,7 @@
   height: var(--rpg-th);
   background-image: var(--rpg-tileset);
   background-position: calc(var(--rpg-tx) * var(--rpg-tw)) calc(var(--rpg-ty) * var(--rpg-th));
+  z-index: calc(var(--rpg-layer, 0) * 1000 + var(--rpg-y));
 }
 
 .rpg .sprite {
@@ -35,6 +36,7 @@
   top: calc(var(--rpg-y) * var(--rpg-th));
   width: var(--rpg-tw);
   height: var(--rpg-th);
+  z-index: calc(var(--rpg-layer, 0) * 1000 + var(--rpg-y));
 }
 
 .rpg .sprite-internal {

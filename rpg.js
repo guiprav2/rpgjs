@@ -122,6 +122,20 @@ rpg.findSprite = function(root, x, y) {
   return null;
 };
 
+rpg.targetSprite = function(sprite) {
+  let map = sprite.closest('.tilemap');
+  let sx = Number(sprite.style.getPropertyValue('--rpg-x'));
+  let sy = Number(sprite.style.getPropertyValue('--rpg-y'));
+  let dir = Number(sprite.style.getPropertyValue('--rpg-sy')) || 0;
+  switch (dir) {
+    case 0: sy++; break;
+    case 1: sy--; break;
+    case 2: sx++; break;
+    case 3: sx--; break;
+  }
+  return rpg.findSprite(map, sx, sy);
+};
+
 rpg.spriteUnblocked = function(sprite) {
   let map = sprite.closest('.tilemap');
   let sx = Number(sprite.style.getPropertyValue('--rpg-x'));

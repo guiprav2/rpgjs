@@ -24,19 +24,14 @@
     import d from './dominant.js';
     import rpg from './rpg.js';
 
-    let [rb, mapa] = await Promise.all([
-      fetch('./sonetto_roadblocks.json').then(x => x.json()),
-      fetch('./map_a.json').then(x => x.json()),
-    ]);
-
     class MainLevel {
-      constructor({ roadblocks, map }) {
-        Object.assign(this, { roadblocks, map });
+      constructor({ game, roadblocks, map }) {
+        Object.assign(this, { game, roadblocks, map });
       }
 
       waterFetched = false;
       waterbucket = (x, y, ...rest) => rpg.tileSprite(x, y, 0, 60, 0, ...rest);
-      traphole = (x, y, ...rest) => rpg.trap(x, y, ...rest);
+      traphole = (...rest) => rpg.trap(4, 5, ...rest);
 
       render = () => rpg({ width: '320px', height: '256px' }, [
         rpg.viewport([
@@ -57,9 +52,31 @@
                   await new Promise(res => setTimeout(res, 1000));
                 },
               }),
-              this.traphole(4, 6, {
+              this.traphole({
                 onFall: async () => {
-                  alert('change map!');
+                  await this.game.load(UndergroundLevel);
+                },
+              }),
+            ]),
+          ]),
+        ]),
+      ]);
+    }
+
+    class UndergroundLevel {
+      constructor({ game, roadblocks, map }) {
+        Object.assign(this, { game, roadblocks, map });
+      }
+
+      render = () => rpg({ width: '320px', height: '256px' }, [
+        rpg.viewport([
+          rpg.tilemap('32px', '32px', 10, 8, 'dungeon_ground.png', 'sonetto.png', this.roadblocks, [
+            rpg.tiles(this.map.map(xs => rpg.tile(...xs))),
+            rpg.sprites([
+              rpg.hero(rpg.sprite(4, 5, '78px', '48px', 'siren.png')),
+              rpg.sprite(3, 1, '111px', '62px', 'dracula.png', 0, {
+                onAction: async () => {
+                  alert(`gah, you can't fetch water anymore`);
                   await new Promise(res => setTimeout(res, 1000));
                 },
               }),
@@ -69,6 +86,38 @@
       ]);
     }
 
-    document.body.append(d.el(MainLevel, { roadblocks: rb, map: mapa }));
+    let loaders = new Map();
+
+    loaders.set(MainLevel, async () => {
+      let [roadblocks, map] = await Promise.all([
+        fetch('./sonetto_roadblocks.json').then(x => x.json()),
+        fetch('./map_a.json').then(x => x.json()),
+      ]);
+      return { roadblocks, map };
+    });
+
+    loaders.set(UndergroundLevel, async () => {
+      let [roadblocks, map] = await Promise.all([
+        fetch('./sonetto_roadblocks.json').then(x => x.json()),
+        fetch('./map_b.json').then(x => x.json()),
+      ]);
+      return { roadblocks, map };
+    });
+
+    class Game {
+      constructor() {
+        this.load(MainLevel, { game: this });
+      }
+
+      load = async Level => {
+        let data = await loaders.get(Level)();
+        this.portal = d.el(Level, { ...data, game: this });
+        d.update();
+      };
+
+      render = () => d.portal(() => this.portal);
+    }
+
+    document.body.append(d.el(Game));
   </script>
 </body>

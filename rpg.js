@@ -68,13 +68,14 @@ rpg.sprites = function(children) {
   return div;
 };
 
-rpg.sprite = function(x, y, sw, sh, sprite, layer) {
+rpg.sprite = function(x, y, sw, sh, sprite, layer, eventHandlers = {}) {
   let div = document.createElement('div');
   let internal = document.createElement('div');
   div.className = 'sprite';
   internal.className = 'sprite-internal';
   for (let [k, v] of Object.entries({ x, y, sw, sh, layer })) { v != null && div.style.setProperty(`--rpg-${k}`, v) }
   div.style.setProperty('--rpg-sprite', `url("${sprite}")`);
+  div.eventHandlers = eventHandlers;
   div.append(internal);
   return div;
 };
@@ -87,6 +88,7 @@ rpg.hero = function(sprite) {
 
 function heroFrame(sprite) {
   requestAnimationFrame(() => heroFrame(sprite));
+  if (sprite.closest('.rpg.locked')) { return }
   if (!sprite.classList.contains('walking') && kbd.lastArrow) {
     sprite.classList.add('walking');
     sprite.transitionHandler = () => heroFrame.transition(sprite);
@@ -95,15 +97,32 @@ function heroFrame(sprite) {
   }
 }
 
+addEventListener('keyhit', async ev => {
+  if (ev.detail.originalEvent.key !== 'z') { return }
+  let hero = document.querySelector('.rpg .hero');
+  if (!hero || hero.closest('.rpg.locked')) { return }
+  let target = rpg.targetSprite(hero);
+  let { onAction } = target?.eventHandlers || {};
+  if (!onAction) { return }
+  let root = hero.closest('.rpg');
+  root.classList.add('locked');
+  await onAction();
+  root.classList.remove('locked');
+});
+
 heroFrame.transition = function(sprite) {
+  let locked = sprite.closest('.rpg.locked');
   let end = false;
 
-  switch (kbd.lastArrow) {
-    case 'ArrowDown': end = !rpg.step(sprite, 0); break;
-    case 'ArrowUp': end = !rpg.step(sprite, 1); break;
-    case 'ArrowRight': end = !rpg.step(sprite, 2); break;
-    case 'ArrowLeft': end = !rpg.step(sprite, 3); break;
-    default: end = true; break;
+  if (locked) { end = true }
+  else {
+    switch (kbd.lastArrow) {
+      case 'ArrowDown': end = !rpg.step(sprite, 0); break;
+      case 'ArrowUp': end = !rpg.step(sprite, 1); break;
+      case 'ArrowRight': end = !rpg.step(sprite, 2); break;
+      case 'ArrowLeft': end = !rpg.step(sprite, 3); break;
+      default: end = true; break;
+    }
   }
 
   if (end) {

@@ -40,7 +40,12 @@
           ]),
           rpg.sprites([
             rpg.hero(rpg.sprite(2, 2, '78px', '48px', 'siren.png')),
-            rpg.sprite(3, 1, '111px', '62px', 'dracula.png'),
+            rpg.sprite(3, 1, '111px', '62px', 'dracula.png', 0, {
+              onAction: async () => {
+                console.log('hi');
+                await new Promise(res => setTimeout(res, 1000));
+              },
+            }),
           ]),
         ]),
       ]),

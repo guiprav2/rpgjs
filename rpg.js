@@ -131,8 +131,8 @@ rpg.spriteUnblocked = function(sprite) {
   for (let tile of rpg.findTiles(map, sx, sy)) {
     let tx = Number(tile.style.getPropertyValue('--rpg-tx'));
     let ty = Number(tile.style.getPropertyValue('--rpg-ty'));
-    let roadblocks = map.roadblocks[ty]?.[tx] || 'OOOO';
-    if (roadblocks[dir] === 'X') { return false }
+    let rb = map.roadblocks[ty]?.[tx] || 'OOOO';
+    if (rb[dir] === 'X') { return false }
   }
 
   let nsx = sx, nsy = sy, incomingDir;

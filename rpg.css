@@ -26,8 +26,8 @@
   width: var(--rpg-tw);
   height: var(--rpg-th);
   background-image: var(--rpg-tileset);
-  background-position: calc(var(--rpg-tx) * var(--rpg-tw)) calc(var(--rpg-ty) * var(--rpg-th));
-  z-index: calc(var(--rpg-layer, 0) * var(--rpg-layer-size, 1000) + var(--rpg-y));
+  background-position: calc(-1 * var(--rpg-tx) * var(--rpg-tw)) calc(-1 * var(--rpg-ty) * var(--rpg-th));
+  z-index: calc(var(--rpg-layer, 0) * var(--rpg-layer-size, 1000) + var(--rpg-high-tile, 0) + var(--rpg-y));
 }
 
 .rpg .sprite {

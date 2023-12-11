@@ -26,7 +26,16 @@
     document.body.append(rpg({ width: '320px', height: '256px' }, [
       rpg.viewport([
         rpg.tilemap('32px', '32px', 10, 8, 'ground.png', 'sonetto.png', [
+          ['OOOOH', 'OOOOH', 'OOOOH', 'XXXX', 'XXXX', 'XXXX', 'XXXX', 'XXXX'],
+          ['XXXX', 'XXXX', 'XXXX', 'XXXX', 'XXXX', 'XXXX', 'XXXX', 'XXXX'],
+          ['OOOOH', 'OOOOH', 'OOOOH', 'XXXX', 'XXXX', 'OOOO', 'OOOO', 'OOOO'],
+          ['XXXX', 'XXXX', 'XXXX', 'XXXX', 'XXXX', 'OOOOH', 'OOOOH', 'OOOOH'],
+          ['XXXX', 'XXXX', 'XXXX', 'XXXX', 'XXXX', 'XXXX', 'XXXX', 'XXXX'],
+          ['XXXX', 'XXXX', 'XXXX', 'OOOO', 'OOOO', 'OOOO', 'OOOO', 'OOOO'],
+          ['XXXX', 'XXXX', 'XXXX', 'OOOO', 'XXXX', 'OOOO', 'OOOO', 'OOOO'],
+        ], [
           rpg.tiles([
+            rpg.tile(1, 0, 0, 0),
             rpg.tile(1, 1, 0, 1),
           ]),
           rpg.sprites([

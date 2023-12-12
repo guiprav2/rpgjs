@@ -3,6 +3,7 @@ import kbd from './kbd.js';
 function rpg(props, children = []) {
   let div = document.createElement('div');
   div.className = 'rpg';
+  if (props.locked) { div.classList.add('locked') }
 
   for (let x of ['width', 'height']) {
     if (props[x]) { div.style[x] = props[x] }
@@ -99,11 +100,11 @@ rpg.tileSprite = function(x, y, tx, ty, layer, eventHandlers) {
 
 rpg.hero = function(sprite) {
   sprite.classList.add('hero');
-  heroFrame(sprite);
+  setTimeout(() => heroFrame(sprite), 100);
   return sprite;
 };
 
-function heroFrame(sprite) {
+function heroFrame(sprite, force) {
   requestAnimationFrame(() => heroFrame(sprite));
   if (sprite.closest('.rpg.locked')) { return }
   if (!sprite.classList.contains('walking') && kbd.lastArrow) {
@@ -124,15 +125,19 @@ addEventListener('keyhit', async ev => {
   let root = hero.closest('.rpg');
   root.classList.add('locked');
   await onAction();
-  root.classList.remove('locked');
+  document.querySelector('.rpg.locked')?.classList?.remove?.('locked');
 });
 
 heroFrame.transition = function(sprite) {
+  let map = sprite.closest('.tilemap');
+  let x = Number(sprite.style.getPropertyValue('--rpg-x'));
+  let y = Number(sprite.style.getPropertyValue('--rpg-y'));
+  let trap = map && rpg.findTrap(map, x, y);
+  if (trap) { return rpg.fall(trap) }
   let locked = sprite.closest('.rpg.locked');
-  let end = false;
+  let end = !map || locked;
 
-  if (locked) { end = true }
-  else {
+  if (!end) {
     switch (kbd.lastArrow) {
       case 'ArrowDown': end = !rpg.step(sprite, 0); break;
       case 'ArrowUp': end = !rpg.step(sprite, 1); break;
@@ -146,12 +151,6 @@ heroFrame.transition = function(sprite) {
     sprite.classList.remove('walking');
     sprite.removeEventListener('transitionend', sprite.transitionHandler);
     sprite.transitionHandler = null;
-    let map = sprite.closest('.tilemap');
-    let x = Number(sprite.style.getPropertyValue('--rpg-x'));
-    let y = Number(sprite.style.getPropertyValue('--rpg-y'));
-    let trap = rpg.findTrap(map, x, y);
-    if (!trap) { return }
-    rpg.fall(trap);
   }
 };
 
@@ -170,7 +169,7 @@ rpg.fall = async function(trap) {
   if (!onFall) { return }
   root.classList.add('locked');
   await onFall();
-  root.classList.remove('locked');
+  document.querySelector('.rpg.locked')?.classList?.remove?.('locked');
 };
 
 rpg.findSprite = function(root, x, y) {

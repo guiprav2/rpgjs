@@ -3,6 +3,9 @@
 <link rel="stylesheet" href="preflight.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <link rel="stylesheet" href="rpg.css">
+<link rel="preload" href="ground.png" as="image">
+<link rel="preload" href="dungeon_ground.png" as="image">
+<link rel="preload" href="sonetto.png" as="image">
 <style>
   body {
     display: flex;
@@ -25,6 +28,15 @@
     import rpg from './rpg.js';
 
     class MainLevel {
+      static load = async () => {
+        let [roadblocks, map] = await Promise.all([
+          fetch('./sonetto_roadblocks.json').then(x => x.json()),
+          fetch('./map_a.json').then(x => x.json()),
+        ]);
+
+        return { roadblocks, map };
+      };
+
       constructor({ game, roadblocks, map }) {
         Object.assign(this, { game, roadblocks, map });
       }
@@ -64,6 +76,15 @@
     }
 
     class UndergroundLevel {
+      static load = async () => {
+        let [roadblocks, map] = await Promise.all([
+          fetch('./sonetto_roadblocks.json').then(x => x.json()),
+          fetch('./map_b.json').then(x => x.json()),
+        ]);
+
+        return { roadblocks, map };
+      };
+
       constructor({ game, roadblocks, map }) {
         Object.assign(this, { game, roadblocks, map });
       }
@@ -86,31 +107,13 @@
       ]);
     }
 
-    let loaders = new Map();
-
-    loaders.set(MainLevel, async () => {
-      let [roadblocks, map] = await Promise.all([
-        fetch('./sonetto_roadblocks.json').then(x => x.json()),
-        fetch('./map_a.json').then(x => x.json()),
-      ]);
-      return { roadblocks, map };
-    });
-
-    loaders.set(UndergroundLevel, async () => {
-      let [roadblocks, map] = await Promise.all([
-        fetch('./sonetto_roadblocks.json').then(x => x.json()),
-        fetch('./map_b.json').then(x => x.json()),
-      ]);
-      return { roadblocks, map };
-    });
-
     class Game {
       constructor() {
-        this.load(MainLevel, { game: this });
+        this.load(MainLevel);
       }
 
       load = async Level => {
-        let data = await loaders.get(Level)();
+        let data = await Level.load();
         this.portal = d.el(Level, { ...data, game: this });
         d.update();
       };

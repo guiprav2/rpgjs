@@ -53,14 +53,14 @@
               rpg.hero(rpg.sprite(2, 3, '78px', '48px', 'siren.png')),
               rpg.sprite(3, 1, '111px', '62px', 'dracula.png', 0, {
                 onAction: async () => {
-                  if (!this.waterFetched) { alert('go fetch water') }
-                  else { this.waterFetched = false; alert('thanks!') }
+                  if (!this.waterFetched) { await rpg.ui.msgbox('go fetch water') }
+                  else { this.waterFetched = false; await rpg.ui.msgbox('thanks!') }
                   await new Promise(res => setTimeout(res, 1000));
                 },
               }),
               this.waterbucket(7, 3, {
                 onAction: async () => {
-                  this.waterFetched = true; alert('water fetched!');
+                  this.waterFetched = true; await rpg.ui.msgbox('water fetched!');
                   await new Promise(res => setTimeout(res, 1000));
                 },
               }),
@@ -73,6 +73,7 @@
             ]),
           ]),
         ]),
+        rpg.ui(),
       ]);
     }
 
@@ -100,7 +101,7 @@
               rpg.hero(rpg.sprite(4, 5, '78px', '48px', 'siren.png')),
               rpg.sprite(3, 1, '111px', '62px', 'dracula.png', 0, {
                 onAction: async () => {
-                  alert(`gah, you can't fetch water anymore`);
+                  await rpg.ui.msgbox(`gah, you can't fetch water for me anymore`);
                   await new Promise(res => setTimeout(res, 1000));
                 },
               }),
@@ -113,6 +114,7 @@
             ]),
           ]),
         ]),
+        rpg.ui(),
       ]);
     }
 

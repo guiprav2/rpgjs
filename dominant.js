@@ -145,7 +145,7 @@ Binding.specialUpdateFnsByKey = {
 
     // Nullish values are converted to empty strings, everything else is
     // assigned as-is (the browser itself converts them to strings).
-    this.target.style[this.subkey] = !nullish(newValue) ? newValue : '';
+    this.target.style.setProperty(this.subkey, !nullish(newValue) ? newValue : '');
 
     // Remember updated value.
     this.lastValue = newValue;
@@ -376,7 +376,7 @@ function createElement(type) {
           }
 
           // Otherwise it's a string or something convertible into string.
-          el.style[k2] = v2;
+          el.style.setProperty(k2, v2);
         }
 
         continue;

@@ -1,15 +1,53 @@
 .rpg {
   position: relative;
   overflow: hidden;
+  font-size: 12px;
 }
 
-.rpg .viewport {
+.rpg .viewport,
+.rpg .ui {
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
   overflow: hidden; /* no visible scrollbars, but scrollable using JS */
+}
+
+.rpg .ui {
+  z-index: 999999;
+  pointer-events: none;
+}
+
+.rpg .ui > * {
+  pointer-events: auto;
+}
+
+.rpg .msgbox {
+  position: absolute;
+  left: 32px;
+  right: 32px;
+  bottom: 32px;
+  border-width: 3px;
+  border-image: url("msgbox.png") 7;
+  border-style: solid;
+  padding: 8px 16px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.rpg .msgbox > .cursor {
+  display: inline-block;
+  transform: scale(80%);
+  margin-left: 4px;
+  animation-name: flash;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes flash {
+  0%, 50%, to { opacity: 1 }
+  25%, 75% { opacity: 0 }
 }
 
 .rpg .tilemap {

@@ -20,6 +20,42 @@ rpg.viewport = function(children) {
   return div;
 };
 
+rpg.ui = function() {
+  let div = document.createElement('div');
+  div.className = 'ui';
+  return div;
+};
+
+rpg.ui.msgbox = function(text) {
+  let box = document.createElement('div');
+  box.className = 'msgbox';
+  document.querySelector('.rpg .ui').append(box);
+  msgboxFrame(box, text);
+  return new Promise(res => box.resolve = res);
+};
+
+function msgboxFrame(box, text, i = 0) {
+  if (box.textContent.length >= text.length) {
+    let div = document.createElement('div');
+    div.className = 'cursor';
+    div.textContent = '▼';
+    box.append(div);
+
+    box.msgboxKeyDownHandler = ev => {
+      if (ev.key !== 'z') { return }
+      box.remove();
+      removeEventListener('keydown', box.msgboxKeyDownHandler);
+      box.resolve();
+    };
+
+    addEventListener('keydown', box.msgboxKeyDownHandler);
+    return;
+  }
+
+  requestAnimationFrame(() => msgboxFrame(box, text, i + 1));
+  box.textContent = text.slice(0, i);
+}
+
 rpg.tilemap = function(tw, th, tmw, tmh, bg, tileset, roadblocks = [], children = []) {
   let div = document.createElement('div');
   div.className = 'tilemap';

@@ -58,7 +58,8 @@
 }
 
 .rpg .tile,
-.rpg .trap {
+.rpg .trap,
+.rpg .fx {
   position: absolute;
   left: calc(var(--rpg-x) * var(--rpg-tw));
   top: calc(var(--rpg-y) * var(--rpg-th));
@@ -97,11 +98,11 @@
 
 .rpg .sprite.animate .sprite-internal,
 .rpg .sprite.walking .sprite-internal {
-  animation: frames steps(4, end) infinite;
+  animation: sprite-frames steps(4, end) infinite;
   animation-duration: var(--rpg-anim-duration, 0.7s);
 }
 
-@keyframes frames {
+@keyframes sprite-frames {
   to {
     background-position-x: calc(-4 * var(--rpg-sw));
   }
@@ -109,4 +110,22 @@
 
 .rpg .sprite.walking {
   transition: var(--rpg-walk-duration, 0.5s) linear left, var(--rpg-walk-duration, 0.5s) linear top;
+}
+
+.rpg .fx-internal {
+  position: absolute;
+  left: calc(-1 * (var(--rpg-fw) - var(--rpg-tw)) / 2);
+  top: calc(-1 * (var(--rpg-fh) - var(--rpg-th)) / 2);
+  width: var(--rpg-fw);
+  height: var(--rpg-fh);
+  background-position: calc(-1 * var(--rpg-fx) * var(--rpg-fw)) calc(-1 * var(--rpg-fy) * var(--rpg-fh));
+  animation: fx-frames steps(var(--rpg-frames), end) 1;
+  animation-duration: var(--rpg-anim-duration, 0.25s);
+  z-index: 999999;
+}
+
+@keyframes fx-frames {
+  to {
+    background-position-x: calc(-1 * (var(--rpg-fx) + var(--rpg-frames)) * var(--rpg-fw));
+  }
 }

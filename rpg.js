@@ -13,6 +13,13 @@ function rpg(props, children = []) {
   return div;
 }
 
+rpg.xyof = function(unit) {
+  return [
+    Number(unit.style.getPropertyValue('--rpg-x')),
+    Number(unit.style.getPropertyValue('--rpg-y')),
+  ];
+};
+
 rpg.viewport = function(children) {
   let div = document.createElement('div');
   div.className = 'viewport';
@@ -160,7 +167,7 @@ addEventListener('keyhit', async ev => {
   if (!onAction) { return }
   let root = hero.closest('.rpg');
   root.classList.add('locked');
-  await onAction();
+  await onAction(hero, target);
   document.querySelector('.rpg.locked')?.classList?.remove?.('locked');
 });
 
@@ -204,7 +211,7 @@ rpg.fall = async function(trap) {
   let { onFall } = trap.eventHandlers || {};
   if (!onFall) { return }
   root.classList.add('locked');
-  await onFall();
+  await onFall(root.querySelector('.hero'), trap);
   document.querySelector('.rpg.locked')?.classList?.remove?.('locked');
 };
 
@@ -274,6 +281,26 @@ rpg.step = function(sprite, dir) {
   }
 
   return true;
+};
+
+rpg.fx = function(x, y, fw, fh, fx, fy, frames, image) {
+  let resolve, promise = new Promise(res => resolve = res);
+  let div = document.createElement('div');
+  let internal = document.createElement('div');
+  div.className = 'fx';
+  internal.className = 'fx-internal';
+  for (let [k, v] of Object.entries({ x, y, fw, fh, fx, fy, frames })) { div.style.setProperty(`--rpg-${k}`, v) }
+  internal.style.backgroundImage = `url("${image}")`;
+
+  internal.addEventListener('animationend', ev => {
+    ev.target.remove();
+    resolve();
+  });
+
+  div.append(internal);
+  let tiles = document.querySelector('.rpg .tiles');
+  tiles.append(div);
+  return promise;
 };
 
 export default rpg;

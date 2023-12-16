@@ -52,8 +52,14 @@
             rpg.sprites([
               rpg.hero(rpg.sprite(2, 3, '78px', '48px', 'siren.png')),
               rpg.sprite(3, 1, '111px', '62px', 'dracula.png', 0, {
-                onAction: async () => {
-                  if (!this.waterFetched) { await rpg.ui.msgbox('go fetch water') }
+                onAction: async (hero, sprite) => {
+                  if (!this.waterFetched) {
+                    let [x, y] = rpg.xyof(hero);
+                    await rpg.fx(x, y, '192px', '192px', 0, 1, 5, '006-Weapon01.png');
+                    await rpg.fx(x, y, '192px', '192px', 0, 0, 5, '006-Weapon01.png');
+                    await rpg.fx(x, y, '192px', '192px', 0, 1, 5, '006-Weapon01.png');
+                    await rpg.ui.msgbox('go fetch water');
+                  }
                   else { this.waterFetched = false; await rpg.ui.msgbox('thanks!') }
                   await new Promise(res => setTimeout(res, 1000));
                 },

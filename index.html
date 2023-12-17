@@ -162,12 +162,15 @@
       // Constants
       const SWIPE_THRESHOLD = 50; // Adjust as needed
       const TAP_THRESHOLD = 5; // Adjust as needed
+      const KEYPRESS_INTERVAL = 10;
 
       // Variables
       let touchStartX = 0;
       let touchStartY = 0;
       let touchEndX = 0;
       let touchEndY = 0;
+      let touchActive = false;
+      let keypressIntervalId;
 
       // Event listeners
       document.addEventListener('touchstart', handleTouchStart, false);
@@ -176,6 +179,7 @@
 
       // Functions
       function handleTouchStart(event) {
+        touchActive = true; // Set touch active flag
         touchStartX = touchEndX = event.touches[0].clientX;
         touchStartY = touchEndY = event.touches[0].clientY;
       }
@@ -183,15 +187,26 @@
       function handleTouchMove(event) {
         touchEndX = event.touches[0].clientX;
         touchEndY = event.touches[0].clientY;
+
+        if (touchActive) { // Check if touch is active
+          const deltaX = touchEndX - touchStartX;
+          const deltaY = touchEndY - touchStartY;
+
+          if (Math.abs(deltaX) > SWIPE_THRESHOLD || Math.abs(deltaY) > SWIPE_THRESHOLD) {
+            !keypressIntervalId && handleSwipe(deltaX, deltaY);
+          }
+        }
       }
 
       function handleTouchEnd(event) {
+        touchActive = false; // Reset touch active flag
+        clearInterval(keypressIntervalId);
+        keypressIntervalId = null;
+
         const deltaX = touchEndX - touchStartX;
         const deltaY = touchEndY - touchStartY;
 
-        if (Math.abs(deltaX) > SWIPE_THRESHOLD || Math.abs(deltaY) > SWIPE_THRESHOLD) {
-          handleSwipe(deltaX, deltaY);
-        } else if (Math.abs(deltaX) < TAP_THRESHOLD && Math.abs(deltaY) < TAP_THRESHOLD) {
+        if (Math.abs(deltaX) < TAP_THRESHOLD && Math.abs(deltaY) < TAP_THRESHOLD) {
           simulateKeyPress('z');
         }
 
@@ -199,21 +214,24 @@
       }
 
       function handleSwipe(deltaX, deltaY) {
-        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-          // Horizontal swipe
-          if (deltaX > 0) {
-            simulateKeyPress('ArrowRight');
+        clearInterval(keypressIntervalId);
+        keypressIntervalId = setInterval(() => {
+          if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            // Horizontal swipe
+            if (deltaX > 0) {
+              simulateKeyPress('ArrowRight');
+            } else {
+              simulateKeyPress('ArrowLeft');
+            }
           } else {
-            simulateKeyPress('ArrowLeft');
+            // Vertical swipe
+            if (deltaY > 0) {
+              simulateKeyPress('ArrowDown');
+            } else {
+              simulateKeyPress('ArrowUp');
+            }
           }
-        } else {
-          // Vertical swipe
-          if (deltaY > 0) {
-            simulateKeyPress('ArrowDown');
-          } else {
-            simulateKeyPress('ArrowUp');
-          }
-        }
+        }, KEYPRESS_INTERVAL);
       }
 
       function simulateKeyPress(key) {

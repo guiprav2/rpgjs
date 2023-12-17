@@ -56,6 +56,8 @@
               rpg.sprites([
                 rpg.hero(rpg.sprite(2, 3, '78px', '48px', 'siren.png')),
                 rpg.sprite(3, 1, '111px', '62px', 'dracula.png', 0, {
+                  animDuration: '0.5s',
+                  walkDuration: '0.25s',
                   onAction: async (hero, sprite) => {
                     if (!this.waterFetched) {
                       await Promise.all([

@@ -153,14 +153,17 @@ rpg.sprites = function(children) {
   return div;
 };
 
-rpg.sprite = function(x, y, sw, sh, sprite, layer, eventHandlers = {}) {
+rpg.sprite = function(x, y, sw, sh, sprite, layer, more = {}) {
   let div = document.createElement('div');
   let internal = document.createElement('div');
   div.className = 'sprite';
   internal.className = 'sprite-internal';
   for (let [k, v] of Object.entries({ x, y, sw, sh, layer })) { v != null && div.style.setProperty(`--rpg-${k}`, v) }
   div.style.setProperty('--rpg-sprite', `url("${sprite}")`);
-  div.eventHandlers = eventHandlers;
+  more.animDuration && div.style.setProperty('--rpg-anim-duration', more.animDuration);
+  more.walkDuration && div.style.setProperty('--rpg-walk-duration', more.walkDuration);
+  div.eventHandlers = {};
+  for (let [k, v] of Object.entries(more)) { if (k.startsWith('on')) { div.eventHandlers[k] = v } }
   div.append(internal);
   return div;
 };

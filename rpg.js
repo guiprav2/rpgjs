@@ -271,11 +271,12 @@ rpg.targetSprite = function(sprite) {
   return rpg.findSprite(map, sx, sy);
 };
 
-rpg.spriteUnblocked = function(sprite) {
+rpg.spriteUnblocked = function(sprite, dir) {
+  if (Number(dir) >= 10) { return true }
   let map = sprite.closest('.tilemap');
   let sx = Number(sprite.style.getPropertyValue('--rpg-x'));
   let sy = Number(sprite.style.getPropertyValue('--rpg-y'));
-  let dir = Number(sprite.style.getPropertyValue('--rpg-sy')) || 0;
+  dir ??= Number(sprite.style.getPropertyValue('--rpg-sy')) || 0;
 
   for (let tile of rpg.findTiles(map, sx, sy)) {
     let tx = Number(tile.style.getPropertyValue('--rpg-tx'));
@@ -303,7 +304,7 @@ rpg.spriteUnblocked = function(sprite) {
 };
 
 rpg.step = function(sprite, dir) {
-  sprite.style.setProperty('--rpg-sy', dir);
+  sprite.style.setProperty('--rpg-sy', Number(dir) < 10 ? dir : Number(dir) - 10);
   if (!rpg.spriteUnblocked(sprite)) { return false }
 
   switch (Number(dir)) {
@@ -314,6 +315,22 @@ rpg.step = function(sprite, dir) {
   }
 
   return true;
+};
+
+rpg.walk = async function(sprite, dirs) {
+  let resolve, promise = new Promise(res => resolve = res);
+  sprite.classList.add('walking');
+  requestAnimationFrame(async () => {
+    for (let dir of dirs) {
+      if (rpg.spriteUnblocked(sprite, dir)) {
+        rpg.step(sprite, dir);
+        Number(dir) < 10 && await new Promise(res => sprite.addEventListener('transitionend', res, { once: true }));
+      }
+    }
+    sprite.classList.remove('walking');
+    resolve();
+  });
+  return promise;
 };
 
 rpg.fx = function(x, y, fw, fh, fx, fy, frames, image) {

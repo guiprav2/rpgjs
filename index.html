@@ -58,12 +58,17 @@
                 rpg.sprite(3, 1, '111px', '62px', 'dracula.png', 0, {
                   onAction: async (hero, sprite) => {
                     if (!this.waterFetched) {
-                      let [x, y] = rpg.xyof(hero);
-                      for (let w of [1, 0, 1]) {
-                        rpg.animateScreen('shakeX');
-                        rpg.playSound('Attack2.ogg');
-                        await rpg.fx(x, y, '192px', '192px', 0, w, 5, '006-Weapon01.png');
-                      }
+                      await Promise.all([
+                        rpg.walk(sprite, [2, 3, 3, 2, 10]),
+                        (async () => {
+                          let [x, y] = rpg.xyof(hero);
+                          for (let w of [1, 0, 1]) {
+                            rpg.animateScreen('shakeX');
+                            rpg.playSound('Attack2.ogg');
+                            await rpg.fx(x, y, '192px', '192px', 0, w, 5, '006-Weapon01.png');
+                          }
+                        })(),
+                      ]);
                       await rpg.ui.msgbox('go fetch water');
                     }
                     else { this.waterFetched = false; await rpg.ui.msgbox('thanks!') }

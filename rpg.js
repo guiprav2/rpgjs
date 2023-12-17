@@ -13,6 +13,16 @@ function rpg(props, children = []) {
   return div;
 }
 
+rpg.playSound = function(sound) {
+  let resolve, promise = new Promise(res => resolve = res);
+  let audio = document.createElement('audio');
+  audio.src = sound;
+  audio.addEventListener('ended', () => { audio.remove(); resolve() });
+  document.body.append(audio);
+  audio.play();
+  return promise;
+};
+
 rpg.screen = function(children) {
   let div = document.createElement('div');
   div.className = 'screen';

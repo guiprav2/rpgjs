@@ -13,6 +13,29 @@ function rpg(props, children = []) {
   return div;
 }
 
+rpg.screen = function(children) {
+  let div = document.createElement('div');
+  div.className = 'screen';
+  div.append(...children);
+  return div;
+};
+
+rpg.animateScreen = function(name) {
+  let resolve, promise = new Promise(res => resolve = res);
+  let screen = document.querySelector('.rpg .screen');
+  if (!screen) { return resolve() }
+  screen.classList.remove('animate__animated', `animate__${name}`);
+  requestAnimationFrame(() => {
+    screen.classList.add('animate__animated', `animate__${name}`);
+    screen.addEventListener('animationend', () => {
+      screen.classList.remove('animate__animated', `animate__${name}`);
+      resolve();
+    }, { once: true });
+  });
+
+  return promise;
+};
+
 rpg.xyof = function(unit) {
   return [
     Number(unit.style.getPropertyValue('--rpg-x')),

@@ -1,9 +1,13 @@
 .rpg {
   position: relative;
-  overflow: hidden;
   font-size: 12px;
 }
 
+.rpg .screen {
+  overflow: hidden;
+}
+
+.rpg .screen,
 .rpg .viewport,
 .rpg .ui {
   position: absolute;

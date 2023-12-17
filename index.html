@@ -1,5 +1,6 @@
 <!doctype html>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=no">
 <link rel="stylesheet" href="preflight.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <link rel="stylesheet" href="rpg.css">
@@ -155,5 +156,76 @@
     }
 
     document.body.append(d.el(Game));
+
+    // SwipeToKeys.js
+    (function () {
+      // Constants
+      const SWIPE_THRESHOLD = 50; // Adjust as needed
+      const TAP_THRESHOLD = 5; // Adjust as needed
+
+      // Variables
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchEndX = 0;
+      let touchEndY = 0;
+
+      // Event listeners
+      document.addEventListener('touchstart', handleTouchStart, false);
+      document.addEventListener('touchmove', handleTouchMove, false);
+      document.addEventListener('touchend', handleTouchEnd, false);
+
+      // Functions
+      function handleTouchStart(event) {
+        touchStartX = touchEndX = event.touches[0].clientX;
+        touchStartY = touchEndY = event.touches[0].clientY;
+      }
+
+      function handleTouchMove(event) {
+        touchEndX = event.touches[0].clientX;
+        touchEndY = event.touches[0].clientY;
+      }
+
+      function handleTouchEnd(event) {
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
+
+        if (Math.abs(deltaX) > SWIPE_THRESHOLD || Math.abs(deltaY) > SWIPE_THRESHOLD) {
+          handleSwipe(deltaX, deltaY);
+        } else if (Math.abs(deltaX) < TAP_THRESHOLD && Math.abs(deltaY) < TAP_THRESHOLD) {
+          simulateKeyPress('z');
+        }
+
+        touchStartX = touchStartY = touchEndX = touchEndY = 0;
+      }
+
+      function handleSwipe(deltaX, deltaY) {
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+          // Horizontal swipe
+          if (deltaX > 0) {
+            simulateKeyPress('ArrowRight');
+          } else {
+            simulateKeyPress('ArrowLeft');
+          }
+        } else {
+          // Vertical swipe
+          if (deltaY > 0) {
+            simulateKeyPress('ArrowDown');
+          } else {
+            simulateKeyPress('ArrowUp');
+          }
+        }
+      }
+
+      function simulateKeyPress(key) {
+        const event = new Event('keydown');
+        event.key = key;
+        dispatchEvent(event);
+        requestAnimationFrame(() => {
+          const event = new Event('keyup');
+          event.key = key;
+          dispatchEvent(event);
+        });
+      }
+    })();
   </script>
 </body>

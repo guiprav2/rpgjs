@@ -7,6 +7,7 @@
 <link rel="preload" href="ground.png" as="image">
 <link rel="preload" href="dungeon_ground.png" as="image">
 <link rel="preload" href="sonetto.png" as="image">
+<script src="windy.js"></script>
 <style>
   body {
     display: flex;
@@ -144,6 +145,24 @@
     class Game {
       constructor() {
         this.load(MainLevel);
+        addEventListener('keydown', ev => {
+          if (ev.key !== 'Escape') { return }
+          if (rpg.menu) { rpg.playSound('003-System03.ogg'); rpg.closeMenu(); return }
+          rpg.playSound('002-System02.ogg');
+          rpg.openMenu(d.jsx`
+            <div class="grid grid-cols-3 h-full bg-black">
+              <div class="col-span-2 window"></div>
+              <div class="window">
+                <div class="menu-col">
+                  <div class="menu-item selected" ${{ onConfirm: () => console.log('Items') }}>Items</div>
+                  <div class="menu-item" ${{ onConfirm: () => console.log('Equip') }}>Equip</div>
+                  <div class="menu-item" ${{ onConfirm: () => console.log('Status') }}>Status</div>
+                  <div class="menu-item" ${{ onConfirm: () => console.log('Quit') }}>Quit</div>
+                </div>
+              </div>
+            </div>
+          `);
+        });
       }
 
       load = async (Level, props = {}) => {

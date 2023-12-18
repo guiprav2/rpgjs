@@ -27,17 +27,21 @@
   pointer-events: auto;
 }
 
+.rpg .msgbox,
+.rpg .window {
+  border-width: 3px;
+  border-image: url("msgbox.png") 7;
+  border-style: solid;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
 .rpg .msgbox {
   position: absolute;
   left: 32px;
   right: 32px;
   bottom: 32px;
-  border-width: 3px;
-  border-image: url("msgbox.png") 7;
-  border-style: solid;
   padding: 8px 16px;
-  color: white;
-  background-color: rgba(0, 0, 0, 0.7);
 }
 
 .rpg .msgbox > .cursor {
@@ -52,6 +56,35 @@
 @keyframes flash {
   0%, 50%, to { opacity: 1 }
   25%, 75% { opacity: 0 }
+}
+
+.rpg .window {
+  padding: 8px;
+}
+
+.rpg .menu {
+  height: 100%;
+}
+
+.rpg .menu-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rpg .menu-item {
+  border-radius: 2px;
+  padding: 2px 4px;
+}
+
+.rpg .menu-item.selected {
+  background-color: #1f2937;
+  animation: menu-item 1s infinite alternate;
+}
+
+@keyframes menu-item {
+  from { background-color: #1f2937 }
+  to { background-color: #111827 }
 }
 
 .rpg .tilemap {

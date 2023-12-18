@@ -356,4 +356,55 @@ rpg.fx = function(x, y, fw, fh, fx, fy, frames, image) {
   return promise;
 };
 
+rpg.openMenu = function(menu) {
+  let div = document.createElement('div');
+  div.className = 'menu';
+  div.append(...Array.isArray(menu) ? menu : [menu]);
+  let root = document.querySelector('.rpg');
+  let ui = root.querySelector('.ui');
+  ui.innerHTML = '';
+  ui.append(div);
+  rpg.menu = div;
+  root.classList.add('locked');
+};
+
+rpg.closeMenu = function() {
+  let root = document.querySelector('.rpg');
+  let ui = root.querySelector('.ui');
+  ui.innerHTML = '';
+  rpg.menu = null;
+  root.classList.remove('locked');
+};
+
+addEventListener('keydown', ev => {
+  if (!ev.key.startsWith('Arrow') && ev.key !== 'z') { return }
+  let selected = document.querySelector('.rpg .menu-item.selected');
+  if (!selected) { return }
+
+  switch (ev.key) {
+    case 'ArrowDown': {
+      let next = selected.nextElementSibling;
+      if (!next || !next.classList.contains('menu-item')) { break }
+      selected.classList.remove('selected');
+      next.classList.add('selected');
+      rpg.playSound('001-System01.ogg');
+      break;
+    }
+
+    case 'ArrowUp': {
+      let next = selected.previousElementSibling;
+      if (!next || !next.classList.contains('menu-item')) { break }
+      selected.classList.remove('selected');
+      next.classList.add('selected');
+      rpg.playSound('001-System01.ogg');
+      break;
+    }
+
+    case 'z':
+      selected.dispatchEvent(new CustomEvent('confirm'));
+      rpg.playSound('002-System02.ogg');
+      break;
+  }
+});
+
 export default rpg;

@@ -62,8 +62,13 @@
   padding: 8px;
 }
 
-.rpg .menu {
+.rpg .menu,
+.rpg .menu .layer {
   height: 100%;
+}
+
+.rpg .menu .layer:not(:last-child) {
+  display: none;
 }
 
 .rpg .menu-col {

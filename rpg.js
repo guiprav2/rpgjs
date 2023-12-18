@@ -357,28 +357,42 @@ rpg.fx = function(x, y, fw, fh, fx, fy, frames, image) {
 };
 
 rpg.openMenu = function(menu) {
-  let div = document.createElement('div');
-  div.className = 'menu';
-  div.append(...Array.isArray(menu) ? menu : [menu]);
   let root = document.querySelector('.rpg');
-  let ui = root.querySelector('.ui');
-  ui.innerHTML = '';
-  ui.append(div);
+  let div = root.querySelector('.menu');
+
+  if (!div) {
+    div = document.createElement('div');
+    div.className = 'menu';
+  }
+
+  let layer = document.createElement('div');
+  layer.className = 'layer';
+  layer.append(...Array.isArray(menu) ? menu : [menu]);
+  div.append(layer);
+
+  if (!div.parentElement) {
+    let ui = root.querySelector('.ui');
+    ui.innerHTML = '';
+    ui.append(div);
+  }
+
   rpg.menu = div;
   root.classList.add('locked');
+  rpg.playSound('002-System02.ogg');
 };
 
 rpg.closeMenu = function() {
   let root = document.querySelector('.rpg');
   let ui = root.querySelector('.ui');
-  ui.innerHTML = '';
-  rpg.menu = null;
-  root.classList.remove('locked');
+  let layers = [...ui.querySelectorAll('.menu .layer')];
+  if (layers.length >= 2) { layers.at(-1).remove() }
+  else { ui.innerHTML = ''; rpg.menu = null; root.classList.remove('locked') }
+  rpg.playSound('003-System03.ogg');
 };
 
 addEventListener('keydown', ev => {
   if (!ev.key.startsWith('Arrow') && ev.key !== 'z') { return }
-  let selected = document.querySelector('.rpg .menu-item.selected');
+  let selected = document.querySelector('.rpg .layer:last-child .menu-item.selected');
   if (!selected) { return }
 
   switch (ev.key) {

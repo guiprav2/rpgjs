@@ -145,24 +145,7 @@
     class Game {
       constructor() {
         this.load(MainLevel);
-        addEventListener('keydown', ev => {
-          if (ev.key !== 'Escape') { return }
-          if (rpg.menu) { rpg.playSound('003-System03.ogg'); rpg.closeMenu(); return }
-          rpg.playSound('002-System02.ogg');
-          rpg.openMenu(d.jsx`
-            <div class="grid grid-cols-3 h-full bg-black">
-              <div class="col-span-2 window"></div>
-              <div class="window">
-                <div class="menu-col">
-                  <div class="menu-item selected" ${{ onConfirm: () => console.log('Items') }}>Items</div>
-                  <div class="menu-item" ${{ onConfirm: () => console.log('Equip') }}>Equip</div>
-                  <div class="menu-item" ${{ onConfirm: () => console.log('Status') }}>Status</div>
-                  <div class="menu-item" ${{ onConfirm: () => console.log('Quit') }}>Quit</div>
-                </div>
-              </div>
-            </div>
-          `);
-        });
+        addEventListener('keydown', this.onKeyDown);
       }
 
       load = async (Level, props = {}) => {
@@ -170,6 +153,31 @@
         this.portal = d.el(Level, { ...data, ...props, game: this });
         d.update();
       };
+
+      onKeyDown = ev => {
+        if (ev.key !== 'Escape') { return }
+        if (rpg.menu) { rpg.closeMenu(); return }
+        rpg.openMenu(d.jsx`
+          <div class="grid grid-cols-3 h-full bg-black">
+            <div class="col-span-2 window"></div>
+            <div class="window">
+              <div class="menu-col">
+                <div class="menu-item selected" ${{ onConfirm: this.onItemsConfirm }}>Items</div>
+                <div class="menu-item" ${{ onConfirm: this.onEquipConfirm }}>Equip</div>
+                <div class="menu-item" ${{ onConfirm: this.onStatusConfirm }}>Status</div>
+                <div class="menu-item" ${{ onConfirm: this.onQuitConfirm }}>Quit</div>
+              </div>
+            </div>
+          </div>
+        `);
+      };
+
+      onItemsConfirm = () => rpg.openMenu(d.jsx`
+        <div class="grid grid-cols-3 h-full bg-black">
+          <div class="col-span-2 window">hello</div>
+          <div class="window">world</div>
+        </div>
+      `);
 
       render = () => d.portal(() => this.portal);
     }

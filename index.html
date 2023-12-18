@@ -173,9 +173,32 @@
       };
 
       onItemsConfirm = () => rpg.openMenu(d.jsx`
-        <div class="grid grid-cols-3 h-full bg-black">
-          <div class="col-span-2 window">hello</div>
-          <div class="window">world</div>
+        <div class="flex flex-col h-full bg-black">
+          <div class="window">Select an item to use.</div>
+          <div class="flex-1 window">
+            <div class="flex gap-2">
+              <div class="flex-1 menu-col">
+                <div class="flex gap-2 items-center menu-item selected">
+                  <img src="033-Item02.png">
+                  Royal Letter
+                </div>
+                <div class="flex gap-2 items-center menu-item">
+                  <img src="021-Potion01.png">
+                  Potion
+                </div>
+              </div>
+              <div class="flex-1 menu-col">
+                <div class="flex gap-2 items-center menu-item">
+                  <img src="034-Item03.png">
+                  Treasure Box
+                </div>
+                <div class="flex gap-2 items-center menu-item">
+                  <img src="022-Potion02.png">
+                  Mana (2)
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       `);
 

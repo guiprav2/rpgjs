@@ -414,6 +414,32 @@ addEventListener('keydown', ev => {
       break;
     }
 
+    case 'ArrowRight': {
+      let parent = selected.parentElement;
+      if (!parent.classList.contains('menu-col')) { return }
+      let i = [...parent.children].indexOf(selected);
+      let nextCol = parent.nextElementSibling;
+      let next = nextCol && (nextCol.children[i] || [...nextCol.children].at(-1));
+      if (!next || !next.classList.contains('menu-item')) { break }
+      selected.classList.remove('selected');
+      next.classList.add('selected');
+      rpg.playSound('001-System01.ogg');
+      break;
+    }
+
+    case 'ArrowLeft': {
+      let parent = selected.parentElement;
+      if (!parent.classList.contains('menu-col')) { return }
+      let i = [...parent.children].indexOf(selected);
+      let nextCol = parent.previousElementSibling;
+      let next = nextCol && (nextCol.children[i] || [...nextCol.children].at(-1));
+      if (!next || !next.classList.contains('menu-item')) { break }
+      selected.classList.remove('selected');
+      next.classList.add('selected');
+      rpg.playSound('001-System01.ogg');
+      break;
+    }
+
     case 'z':
       selected.dispatchEvent(new CustomEvent('confirm'));
       rpg.playSound('002-System02.ogg');

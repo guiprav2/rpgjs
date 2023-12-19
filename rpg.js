@@ -377,6 +377,7 @@ rpg.openMenu = function(menu) {
   }
 
   rpg.menu = div;
+  kbd.swipeKeypressInterval = 250;
   root.classList.add('locked');
   rpg.playSound('002-System02.ogg');
 };
@@ -386,7 +387,7 @@ rpg.closeMenu = function() {
   let ui = root.querySelector('.ui');
   let layers = [...ui.querySelectorAll('.menu .layer')];
   if (layers.length >= 2) { layers.at(-1).remove() }
-  else { ui.innerHTML = ''; rpg.menu = null; root.classList.remove('locked') }
+  else { kbd.swipeKeypressInterval = 10; ui.innerHTML = ''; rpg.menu = null; root.classList.remove('locked') }
   rpg.playSound('003-System03.ogg');
 };
 

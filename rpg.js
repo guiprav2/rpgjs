@@ -391,6 +391,14 @@ rpg.closeMenu = function() {
   rpg.playSound('003-System03.ogg');
 };
 
+rpg.closeAllMenu = function() {
+  let root = document.querySelector('.rpg');
+  let ui = root.querySelector('.ui');
+  ui.innerHTML = '';
+  rpg.menu = null;
+  root.classList.remove('locked');
+};
+
 addEventListener('keydown', ev => {
   if (!ev.key.startsWith('Arrow') && ev.key !== 'z') { return }
   let selected = document.querySelector('.rpg .layer:last-child .menu-item.selected');

@@ -178,7 +178,7 @@
           <div class="flex-1 window">
             <div class="flex gap-2">
               <div class="flex-1 menu-col">
-                <div class="flex gap-2 items-center menu-item selected">
+                <div class="flex gap-2 items-center menu-item selected" ${{ onConfirm: this.onRoyalLetter }}>
                   <img src="033-Item02.png">
                   Royal Letter
                 </div>
@@ -201,6 +201,11 @@
           </div>
         </div>
       `);
+
+      onRoyalLetter = async () => {
+        rpg.closeAllMenu();
+        await rpg.ui.msgbox('Royal Letter. Not useful now.');
+      };
 
       render = () => d.portal(() => this.portal);
     }
